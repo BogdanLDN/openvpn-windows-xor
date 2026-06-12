@@ -132,17 +132,26 @@ if (($arch -eq "all") -Or ($arch -eq "arm64")) {
     msbuild "openvpn.sln" /p:Configuration="Release" /p:Platform="ARM64" /maxcpucount /t:Build
 }
 
-### Copy OpenSSL/vcpkg runtime DLLs next to the built OpenVPN binaries (build.wsf packages them from there).
-### Search the WHOLE workspace (vcpkg classic install dir, manifest-mode vcpkg_installed, openvpn tree).
-Write-Host "=== Searching workspace for libcrypto-3*/libssl-3* DLLs ==="
-$found = Get-ChildItem "${basedir}" -Recurse -Include "libcrypto-3*.dll","libssl-3*.dll","libpkcs11-helper-1.dll" -ErrorAction SilentlyContinue
-$found | ForEach-Object { Write-Host ("  FOUND: " + $_.FullName) }
-if (-not $found) { Write-Host "  (NONE found - OpenSSL likely built static)" }
+### Copy OpenSSL/vcpkg RELEASE runtime DLLs next to the built OpenVPN binaries (build.wsf packages from there).
+### CRITICAL: source ONLY from the manifest-mode vcpkg_installed RELEASE bin and EXCLUDE any '\debug\' path.
+### The debug variant of libpkcs11-helper-1.dll links the debug CRT (vcruntime140d.dll / ucrtbased.dll),
+### which is NOT redistributable and absent on user machines -> openvpn.exe fails to load (STATUS_DLL_NOT_FOUND)
+### -> mass service_start_error. Pulling release-only guarantees a dependency on the normal vcruntime140.dll.
+Write-Host "=== Staging RELEASE vcpkg runtime DLLs (libcrypto-1_1/libssl-1_1/libpkcs11-helper, no debug) ==="
+$found = Get-ChildItem "${basedir}\openvpn" -Recurse -Include "libcrypto-1_1*.dll","libssl-1_1*.dll","libpkcs11-helper-1.dll" -ErrorAction SilentlyContinue |
+    Where-Object { $_.FullName -match '\\vcpkg_installed\\' -and $_.FullName -notmatch '\\debug\\' }
+$found | ForEach-Object { Write-Host ("  FOUND (release): " + $_.FullName) }
+if (-not $found) { Write-Host "  WARNING: no release DLLs found under vcpkg_installed" }
 foreach ($outRel in @("Win32-Output\Release","x64-Output\Release","ARM64-Output\Release")) {
     $out = Join-Path "${basedir}\openvpn" $outRel
     if (Test-Path $out) {
         $found | Copy-Item -Destination $out -Force -ErrorAction SilentlyContinue
-        Write-Host ("Staged DLLs into ${outRel}: " + ((Get-ChildItem $out -Filter '*.dll' -EA SilentlyContinue | Select-Object -Expand Name) -join ', '))
+        # перевірка: жодна стейджена DLL не має тягнути debug-CRT
+        Get-ChildItem $out -Filter 'libpkcs11-helper-1.dll' -EA SilentlyContinue | ForEach-Object {
+            $t = [Text.Encoding]::ASCII.GetString([IO.File]::ReadAllBytes($_.FullName))
+            if ($t -match 'vcruntime140d\.dll|ucrtbased\.dll|msvcp140d\.dll') { Write-Host ("  !!! DEBUG-CRT dependency still in " + $_.FullName) }
+        }
+        Write-Host ("Staged into ${outRel}: " + ((Get-ChildItem $out -Filter '*.dll' -EA SilentlyContinue | Select-Object -Expand Name) -join ', '))
     }
 }
 
