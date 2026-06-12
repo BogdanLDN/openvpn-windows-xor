@@ -72,8 +72,15 @@ jobs:
       - name: Get latest CMake and ninja
         uses: lukka/get-cmake@latest
 
-      - name: Install rst2html
-        run: python -m pip install --upgrade pip rst2html
+      - name: Install docutils (rst2html)
+        run: python -m pip install --upgrade pip docutils
+
+      - name: Generate openvpn.8.html (build.wsf packages it; MSVC build does not)
+        working-directory: openvpn/doc
+        run: |
+          python -c "from docutils.core import publish_file; publish_file(source_path='openvpn.8.rst', destination_path='openvpn.8.html', writer_name='html')"
+          if (-not (Test-Path openvpn.8.html)) { Write-Error 'openvpn.8.html not generated'; exit 1 }
+          Write-Host ("generated openvpn.8.html size=" + (Get-Item openvpn.8.html).Length)
 
       - name: Setup MSVC prompt
         uses: ilammy/msvc-dev-cmd@v1
