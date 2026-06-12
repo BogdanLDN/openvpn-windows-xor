@@ -93,6 +93,16 @@ jobs:
             }
           }
 
+      - name: Add vcpkg builtin-baseline to openvpn-gui manifest (newer vcpkg requires it)
+        run: |
+          $sha = (git -C "${{ github.workspace }}\vcpkg" rev-parse HEAD).Trim()
+          $path = "${{ github.workspace }}\openvpn-gui\vcpkg.json"
+          $j = Get-Content $path -Raw | ConvertFrom-Json
+          $j | Add-Member -NotePropertyName 'builtin-baseline' -NotePropertyValue $sha -Force
+          ($j | ConvertTo-Json -Depth 10) | Set-Content $path -Encoding ascii
+          Write-Host "patched openvpn-gui/vcpkg.json builtin-baseline = $sha"
+          Get-Content $path
+
       - name: Build
         working-directory: openvpn-build/windows-msi
         run: |
