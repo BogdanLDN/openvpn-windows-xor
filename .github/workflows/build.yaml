@@ -21,7 +21,7 @@ jobs:
       WIX: ${{ github.workspace }}\wix\
 
     name: 'openvpn-build'
-    runs-on: windows-2019
+    runs-on: windows-2022
 
     steps:
       - name: Get date
