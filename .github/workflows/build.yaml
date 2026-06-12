@@ -79,7 +79,7 @@ jobs:
 
       - name: Install Wix 3.14
         run: |
-          Invoke-WebRequest -Uri "https://wixdl.blob.core.windows.net/releases/v3.14.0.5722/wix314-binaries.zip" -OutFile wix.zip
+          Invoke-WebRequest -Uri "https://github.com/wixtoolset/wix3/releases/download/wix3141rtm/wix314-binaries.zip" -OutFile wix.zip
           Expand-Archive -Path .\wix.zip -DestinationPath wix\bin
 
       - name: Build
