@@ -86,8 +86,22 @@ switch ($arch)
 $gui_arch | ForEach-Object  {
 	$platform = $_
     Write-Host "Building openvpn-gui ${platform}"
-    & "$Env:CMAKE" -S . --preset ${platform}-release-${ossl}
-    & "$Env:CMAKE" --build --preset ${platform}-release-${ossl}
+    # openvpn-gui presets are "<plat>" (configure) and "<plat>-release" (build); no "-ossl*" variant.
+    & "$Env:CMAKE" -S . --preset ${platform}
+    & "$Env:CMAKE" --build --preset ${platform}-release
+}
+
+### Stage openvpn-gui.exe where build.wsf expects it (out\build\<plat>-release-ossl3\)
+$guiExe = Get-ChildItem "${basedir}\openvpn-gui\out" -Recurse -Filter "openvpn-gui.exe" -ErrorAction SilentlyContinue | Select-Object -First 1
+if ($guiExe) {
+    foreach ($p in @("x86-release-ossl3","x64-release-ossl3","arm64-release-ossl3")) {
+        $d = "${basedir}\openvpn-gui\out\build\$p"
+        New-Item -ItemType Directory -Force -Path $d | Out-Null
+        Copy-Item $guiExe.FullName -Destination $d -Force
+    }
+    Write-Host "Staged openvpn-gui.exe from $($guiExe.FullName)"
+} else {
+    Write-Host "WARNING: openvpn-gui.exe not found under openvpn-gui\out"
 }
 
 ### Build OpenVPN
