@@ -729,13 +729,13 @@
                             <File Name="vcruntime140.dll" Source="vcredist\$(sys.BUILDARCH)\vcruntime140.dll"/>
                         </Component>
                         <Component Id="bin.libcrypto_3.dll" Guid="{FAAAB7A5-044F-46FE-96A8-2BBA6794A6E3}">
-                            <File Name="libcrypto-3$(var.OPENSSL_PLAT).dll" Source="!(bindpath.openvpnbin)libcrypto-3$(var.OPENSSL_PLAT).dll"/>
+                            <File Name="libcrypto-1_1$(var.OPENSSL_PLAT).dll" Source="!(bindpath.openvpnbin)libcrypto-1_1$(var.OPENSSL_PLAT).dll"/>
                         </Component>
                         <Component Id="bin.libpkcs11_helper_1.dll" Guid="{3889D7CD-DD16-42A0-9823-B951838E1E09}">
                             <File Name="libpkcs11-helper-1.dll" Source="!(bindpath.openvpnbin)libpkcs11-helper-1.dll"/>
                         </Component>
                         <Component Id="bin.libssl_3.dll" Guid="{C4259395-A416-4C84-8A96-FA7D1AE450FF}">
-                            <File Name="libssl-3$(var.OPENSSL_PLAT).dll" Source="!(bindpath.openvpnbin)libssl-3$(var.OPENSSL_PLAT).dll"/>
+                            <File Name="libssl-1_1$(var.OPENSSL_PLAT).dll" Source="!(bindpath.openvpnbin)libssl-1_1$(var.OPENSSL_PLAT).dll"/>
                         </Component>
                         <Component Id="bin.openssl.exe" Guid="{8EB16B96-BAFF-40BC-B29D-52833AAC9340}">
                             <File Name="openssl.exe" Source="!(bindpath.opensslbin)openssl.exe"/>
