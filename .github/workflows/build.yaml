@@ -30,12 +30,12 @@ jobs:
           echo "DATE=${date}" >> $Env:GITHUB_ENV
 
       - name: Checkout openvpn-build
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: openvpn-build
 
       - name: Checkout openvpn
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: openvpn/openvpn
           ref: master
@@ -56,13 +56,13 @@ jobs:
         run: cd ${{ github.workspace }}\openvpn\ && git apply --ignore-whitespace -v 06-tunnelblick-openvpn_xorpatch-e.diff
 
       - name: Checkout openvpn-gui
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: openvpn/openvpn-gui
           path: openvpn-gui
 
       - name: Checkout vcpkg
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: microsoft/vcpkg
           path: vcpkg
@@ -89,7 +89,7 @@ jobs:
           ./build-and-package.ps1 -basedir ../.. -ossl ossl3 -nosign -arch ${{ matrix.arch }} -nodevprompt
 
       - name: Archive artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: openvpn-master-${{ matrix.arch }}-${{ env.DATE }}
           path: ${{ github.workspace }}\openvpn-build\windows-msi\image\*-${{ matrix.arch }}.msi
