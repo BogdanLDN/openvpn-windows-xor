@@ -34,7 +34,8 @@ define([PRODUCT_NAME],      [FastOrange])
 define([PRODUCT_PUBLISHER], [FastOrange])
 
 dnl The package version as displayed by UI and used in filenames (no spaces, please).
-define([PACKAGE_VERSION], [2.5.5-I602])
+dnl Має відповідати реальному openvpn (workflow чекаутить v2.5.7) — це лише лейбл у назві файлу/ProductName.
+define([PACKAGE_VERSION], [2.5.7])
 
 dnl The MSI product version in the form of n[.n[.n]] (numbers only).
 dnl The third field is 100*product release + package version.
