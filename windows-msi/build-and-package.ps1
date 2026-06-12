@@ -118,15 +118,17 @@ if (($arch -eq "all") -Or ($arch -eq "arm64")) {
     msbuild "openvpn.sln" /p:Configuration="Release" /p:Platform="ARM64" /maxcpucount /t:Build
 }
 
-### Copy vcpkg OpenSSL runtime DLLs next to the built OpenVPN binaries.
-### vcpkg builds libcrypto-3*/libssl-3* into vcpkg\installed\<triplet>\bin, but applocal does not
-### always stage them into the OpenVPN output dir that build.wsf packages from -> copy them explicitly.
-$ovpnDlls = Get-ChildItem "${basedir}\vcpkg\installed" -Recurse -Filter "lib*.dll" -ErrorAction SilentlyContinue | Where-Object { $_.FullName -match '\\bin\\' }
+### Copy OpenSSL/vcpkg runtime DLLs next to the built OpenVPN binaries (build.wsf packages them from there).
+### Search the WHOLE workspace (vcpkg classic install dir, manifest-mode vcpkg_installed, openvpn tree).
+Write-Host "=== Searching workspace for libcrypto-3*/libssl-3* DLLs ==="
+$found = Get-ChildItem "${basedir}" -Recurse -Include "libcrypto-3*.dll","libssl-3*.dll","libpkcs11-helper-1.dll" -ErrorAction SilentlyContinue
+$found | ForEach-Object { Write-Host ("  FOUND: " + $_.FullName) }
+if (-not $found) { Write-Host "  (NONE found - OpenSSL likely built static)" }
 foreach ($outRel in @("Win32-Output\Release","x64-Output\Release","ARM64-Output\Release")) {
     $out = Join-Path "${basedir}\openvpn" $outRel
     if (Test-Path $out) {
-        $ovpnDlls | Copy-Item -Destination $out -Force -ErrorAction SilentlyContinue
-        Write-Host "Staged OpenSSL/vcpkg DLLs into ${outRel}"
+        $found | Copy-Item -Destination $out -Force -ErrorAction SilentlyContinue
+        Write-Host ("Staged DLLs into ${outRel}: " + ((Get-ChildItem $out -Filter '*.dll' -EA SilentlyContinue | Select-Object -Expand Name) -join ', '))
     }
 }
 
