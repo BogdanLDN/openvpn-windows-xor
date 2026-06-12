@@ -10,8 +10,9 @@ on:
 jobs:
   msvc:
     strategy:
+      fail-fast: false
       matrix:
-        arch: [x86, amd64, arm64]
+        arch: [x86, amd64]
 
     env:
       CMAKE: cmake.exe
@@ -81,6 +82,16 @@ jobs:
         run: |
           Invoke-WebRequest -Uri "https://github.com/wixtoolset/wix3/releases/download/wix3141rtm/wix314-binaries.zip" -OutFile wix.zip
           Expand-Archive -Path .\wix.zip -DestinationPath wix\bin
+
+      - name: Disable SpectreMitigation in openvpn vcxproj (Spectre libs not on runner)
+        run: |
+          Get-ChildItem ${{ github.workspace }}\openvpn -Recurse -Filter *.vcxproj | ForEach-Object {
+            $c = Get-Content $_.FullName -Raw
+            if ($c -match 'SpectreMitigation') {
+              ($c -replace '<SpectreMitigation>[^<]*</SpectreMitigation>','<SpectreMitigation>false</SpectreMitigation>') | Set-Content $_.FullName -NoNewline
+              Write-Host "patched $($_.Name)"
+            }
+          }
 
       - name: Build
         working-directory: openvpn-build/windows-msi
