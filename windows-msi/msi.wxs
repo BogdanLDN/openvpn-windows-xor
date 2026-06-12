@@ -344,7 +344,7 @@
             Value="[BINDIRREG]"
             Sequence="first">BINDIRREG AND NOT Installed</SetProperty>
         <Property Id="BINDIRPREV">
-            <ComponentSearch Id="bin.openvpn.exe" Guid="{4D920FC9-DF3C-4D34-ADE6-3EEEF8AE901A}"/>
+            <ComponentSearch Id="bin.openvpn.exe" Guid="{D6D41E8E-1F95-410C-B653-2184F4E5E6BA}"/>
         </Property>
         <SetProperty
             After="SetBinDirReg"
@@ -725,65 +725,66 @@
                     </Component>
 
                     <Directory Id="BINDIR" Name="bin">
-                        <Component Id="bin.vcruntime140.dll" Guid="{B4440841-D2A6-4E2C-9B59-67591311F955}">
+                        <Component Id="bin.vcruntime140.dll" Guid="{13D01490-6F65-4247-A900-B1BF3FE8A70F}">
                             <File Name="vcruntime140.dll" Source="vcredist\$(sys.BUILDARCH)\vcruntime140.dll"/>
                         </Component>
-                        <Component Id="bin.libcrypto_3.dll" Guid="{811694A9-DC99-4CFA-BD72-4877F8E32C7C}">
+                        <Component Id="bin.libcrypto_3.dll" Guid="{FAAAB7A5-044F-46FE-96A8-2BBA6794A6E3}">
                             <File Name="libcrypto-3$(var.OPENSSL_PLAT).dll" Source="!(bindpath.openvpnbin)libcrypto-3$(var.OPENSSL_PLAT).dll"/>
                         </Component>
-                        <Component Id="bin.libpkcs11_helper_1.dll" Guid="{62BB5466-934A-41FE-989B-9D0B6BD5151F}">
+                        <Component Id="bin.libpkcs11_helper_1.dll" Guid="{3889D7CD-DD16-42A0-9823-B951838E1E09}">
                             <File Name="libpkcs11-helper-1.dll" Source="!(bindpath.openvpnbin)libpkcs11-helper-1.dll"/>
                         </Component>
-                        <Component Id="bin.libssl_3.dll" Guid="{34B9FB21-7621-4C6A-8CA0-2C907F6ADDCE}">
+                        <Component Id="bin.libssl_3.dll" Guid="{C4259395-A416-4C84-8A96-FA7D1AE450FF}">
                             <File Name="libssl-3$(var.OPENSSL_PLAT).dll" Source="!(bindpath.openvpnbin)libssl-3$(var.OPENSSL_PLAT).dll"/>
                         </Component>
-                        <Component Id="bin.openssl.exe" Guid="{E8876024-809B-40F1-A13B-A0DACFAA0AF0}">
+                        <Component Id="bin.openssl.exe" Guid="{8EB16B96-BAFF-40BC-B29D-52833AAC9340}">
                             <File Name="openssl.exe" Source="!(bindpath.opensslbin)openssl.exe"/>
                         </Component>
-                        <Component Id="bin.openvpn.exe" Guid="{4D920FC9-DF3C-4D34-ADE6-3EEEF8AE901A}">
+                        <Component Id="bin.openvpn.exe" Guid="{D6D41E8E-1F95-410C-B653-2184F4E5E6BA}">
                             <File Id="bin.openvpn.exe" Name="openvpn.exe" Source="!(bindpath.openvpnbin)openvpn.exe"/>
                         </Component>
-                        <Component Id="bin.openvpn_gui.exe" Guid="{5A893CD4-EA7E-4887-89D0-15BBE904FE11}">
+                        <Component Id="bin.openvpn_gui.exe" Guid="{60E69E7F-03FA-4B88-9E6E-EB5AD3F1CF3C}">
                             <File Id="bin.openvpn_gui.exe" Name="openvpn-gui.exe" Source="!(bindpath.openvpnguibin)openvpn-gui.exe"/>
                         </Component>
-                        <Component Id="bin.openvpnserv.exe" Guid="{43A4F408-9399-4BD7-9978-0ECE4A582929}">
+                        <Component Id="bin.openvpnserv.exe" Guid="{8698FBA9-BF4E-4C7B-9B53-DDDE36C3D991}">
                             <File Name="openvpnserv.exe" Source="!(bindpath.openvpnbin)openvpnserv.exe"/>
                             <ServiceControl
                                 Id="OpenVPNServiceInteractive"
-                                Name="OpenVPNServiceInteractive"
+                                Name="FastOrangeService"
                                 Stop="both"
                                 Start="install"
                                 Remove="uninstall"/>
                             <ServiceInstall
                                 Id="OpenVPNServiceInteractive"
-                                Name="OpenVPNServiceInteractive"
-                                DisplayName="OpenVPN Interactive Service"
-                                Description="Allows OpenVPN GUI and other clients to establish OpenVPN connections without administrative privileges in a secure way."
-                                Type="shareProcess"
-                                Start="auto"
-                                ErrorControl="normal">
-                                <ServiceDependency Id="Dhcp"/>
-                            </ServiceInstall>
-                        </Component>
-                        <Component Id="bin.openvpnserv2.exe" Guid="{8867EEBF-B928-49D7-A1F5-D33E2BCAAD70}">
-                            <File Name="openvpnserv2.exe" Source="!(bindpath.openvpnserv2)openvpnserv2.exe"/>
-                            <ServiceControl
-                                Id="OpenVPNService"
-                                Name="OpenVPNService"
-                                Stop="both"
-                                Start="install"
-                                Remove="uninstall"/>
-                            <ServiceInstall
-                                Id="OpenVPNService"
-                                Name="OpenVPNService"
-                                DisplayName="OpenVPNService"
+                                Name="FastOrangeService"
+                                DisplayName="FastOrange Service"
+                                Description="Allows the FastOrange app to establish connections without administrative privileges in a secure way."
+                                Arguments="-instance interactive fo"
                                 Type="ownProcess"
                                 Start="auto"
                                 ErrorControl="normal">
                                 <ServiceDependency Id="Dhcp"/>
                             </ServiceInstall>
                         </Component>
-                        <Component Id="bin.tapctl.exe" Guid="{5A294591-0F71-470F-977B-DD288AB2B437}">
+                        <Component Id="bin.openvpnserv2.exe" Guid="{E188D7BA-00FE-47F3-AAD3-3654BDCD9CF3}">
+                            <File Name="openvpnserv2.exe" Source="!(bindpath.openvpnserv2)openvpnserv2.exe"/>
+                            <ServiceControl
+                                Id="OpenVPNService"
+                                Name="FastOrangeServiceLegacy"
+                                Stop="both"
+                                Start="install"
+                                Remove="uninstall"/>
+                            <ServiceInstall
+                                Id="OpenVPNService"
+                                Name="FastOrangeServiceLegacy"
+                                DisplayName="FastOrangeServiceLegacy"
+                                Type="ownProcess"
+                                Start="auto"
+                                ErrorControl="normal">
+                                <ServiceDependency Id="Dhcp"/>
+                            </ServiceInstall>
+                        </Component>
+                        <Component Id="bin.tapctl.exe" Guid="{CDECD671-3807-40F8-ABBF-103F26FC9C07}">
                             <File Name="tapctl.exe" Source="!(bindpath.openvpnbin)tapctl.exe" KeyPath="yes"/>
                         </Component>
                     </Directory>
@@ -1138,14 +1139,14 @@
             <Component Id="reg.path" Guid="{5FF63993-1F41-4EEF-8E04-2C9F10F7C1DC}">
                 <RegistryValue
                     Root="HKLM"
-                    Key="Software\$(var.PRODUCT_NAME)"
+                    Key="Software\OpenVPNfo"
                     Type="string"
                     Value="[PRODUCTDIR]"/>
             </Component>
             <Component Id="reg.config_dir" Guid="{FA8F296E-3808-4861-AEC1-A14062D060AF}">
                 <RegistryValue
                     Root="HKLM"
-                    Key="Software\$(var.PRODUCT_NAME)"
+                    Key="Software\OpenVPNfo"
                     Name="config_dir"
                     Type="string"
                     Value="[CONFIGDIR]"/>
@@ -1153,7 +1154,7 @@
             <Component Id="reg.autostart_config_dir" Guid="{5D2C1C1D-F576-41C9-9A1A-8857DC9F1E63}">
                 <RegistryValue
                     Root="HKLM"
-                    Key="Software\$(var.PRODUCT_NAME)"
+                    Key="Software\OpenVPNfo"
                     Name="autostart_config_dir"
                     Type="string"
                     Value="[CONFIGAUTODIR]"/>
@@ -1161,7 +1162,7 @@
             <Component Id="reg.config_ext" Guid="{A5CD806D-8E76-4A2F-86E9-B7FDE718088A}">
                 <RegistryValue
                     Root="HKLM"
-                    Key="Software\$(var.PRODUCT_NAME)"
+                    Key="Software\OpenVPNfo"
                     Name="config_ext"
                     Type="string"
                     Value="$(var.CONFIG_EXTENSION)"/>
@@ -1169,7 +1170,7 @@
             <Component Id="reg.disable_save_passwords" Guid="{217D5F60-6F8B-48D1-9B7A-67CDC4511A5E}">
                 <RegistryValue
                     Root="HKLM"
-                    Key="Software\$(var.PRODUCT_NAME)"
+                    Key="Software\OpenVPNfo"
                     Name="disable_save_passwords"
                     Type="string"
                     Value="[DISABLESAVEPWD]"/>
@@ -1177,7 +1178,7 @@
             <Component Id="reg.exe_path" Guid="{36718C27-DA91-428D-AF1F-71E9325B6AFB}">
                 <RegistryValue
                     Root="HKLM"
-                    Key="Software\$(var.PRODUCT_NAME)"
+                    Key="Software\OpenVPNfo"
                     Name="exe_path"
                     Type="string"
                     Value="[BINDIR]openvpn.exe"/>
@@ -1185,7 +1186,7 @@
             <Component Id="reg.log_append" Guid="{BAC3CB98-4C57-4AA3-A4EC-A1D49B8EF90E}">
                 <RegistryValue
                     Root="HKLM"
-                    Key="Software\$(var.PRODUCT_NAME)"
+                    Key="Software\OpenVPNfo"
                     Name="log_append"
                     Type="string"
                     Value="[LOGAPPEND]"/>
@@ -1193,7 +1194,7 @@
             <Component Id="reg.log_dir" Guid="{4ED153F2-E679-4B3E-8D6F-BDD0628195CE}">
                 <RegistryValue
                     Root="HKLM"
-                    Key="Software\$(var.PRODUCT_NAME)"
+                    Key="Software\OpenVPNfo"
                     Name="log_dir"
                     Type="string"
                     Value="[LOGDIR]"/>
@@ -1201,7 +1202,7 @@
             <Component Id="reg.ovpn_admin_group" Guid="{FCFFC52F-C813-4DC6-9988-F99DB57FE480}">
                 <RegistryValue
                     Root="HKLM"
-                    Key="Software\$(var.PRODUCT_NAME)"
+                    Key="Software\OpenVPNfo"
                     Name="ovpn_admin_group"
                     Type="string"
                     Value="[ADMINGROUP]"/>
@@ -1209,7 +1210,7 @@
             <Component Id="reg.priority" Guid="{7D7E99C2-5BDD-4F52-BDE8-666A4403B64F}">
                 <RegistryValue
                     Root="HKLM"
-                    Key="Software\$(var.PRODUCT_NAME)"
+                    Key="Software\OpenVPNfo"
                     Name="priority"
                     Type="string"
                     Value="[PRIORITY]"/>

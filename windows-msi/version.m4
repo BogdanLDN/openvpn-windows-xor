@@ -28,8 +28,10 @@ dnl MSI Provisioning
 dnl ============================================================
 
 dnl Define the product name and publisher.
-define([PRODUCT_NAME],      [OpenVPN])
-define([PRODUCT_PUBLISHER], [OpenVPN, Inc.])
+dnl FastOrange: PRODUCT_NAME керує реєстром (Software\FastOrange), папкою, ARP (Uninstall\FastOrange),
+dnl NSIS-детектом і назвами адаптерів — каскадна ізоляція від нативного OpenVPN (він шукає "OpenVPN").
+define([PRODUCT_NAME],      [FastOrange])
+define([PRODUCT_PUBLISHER], [FastOrange])
 
 dnl The package version as displayed by UI and used in filenames (no spaces, please).
 define([PACKAGE_VERSION], [2.5.5-I602])
@@ -40,13 +42,13 @@ dnl The fourth field is ignored by MSI.
 define([PRODUCT_VERSION], [2.5.028])
 
 dnl The MSI product code MUST change on each product release.
-define([PRODUCT_CODE], [{ECDEB23C-E72D-F54F-081D-D2180DBF1497}])
+define([PRODUCT_CODE], [{B562EDDC-71C2-4B1F-A0FC-0A7DFF760B3C}])
 
 dnl The MSI upgrade codes MUST persist for all versions of the same product line.
-dnl Please use own upgrade codes when deploying a non-official OpenVPN release.
-define([UPGRADE_CODE_x86],   [{1195A47B-A37A-4055-9D34-B7A691F7E97B}])
-define([UPGRADE_CODE_amd64], [{461BDF86-D389-4471-BF36-99806B64C127}])
-define([UPGRADE_CODE_arm64], [{1E8C4DDC-9E93-4AE2-9495-DF86821EAA3A}])
+dnl FastOrange: ВЛАСНІ upgrade-коди (не офіційні OpenVPN) — щоб наш продукт був окремою лінією.
+define([UPGRADE_CODE_x86],   [{D4A37A47-89CA-4B84-9B6C-2CAA0DC6210C}])
+define([UPGRADE_CODE_amd64], [{88BE1124-5BBA-4040-B3AF-A09E38660D54}])
+define([UPGRADE_CODE_arm64], [{CB06870B-148E-483E-AE27-5071F8139215}])
 
 dnl OpenVPN configration file extension (e.g. conf, ovpn...)
 define([CONFIG_EXTENSION], [ovpn])
